@@ -1,10 +1,9 @@
 #include <iostream>
-#include <vector> 
-#include <random>
+ #include <random>
 #include <termios.h>
 #include <unistd.h>
 
-char getch() {
+char getch() {          //for key input
     char buf = 0;
     struct termios old{};
     fflush(stdout);
@@ -22,7 +21,8 @@ char getch() {
 }
 
 int main(){
-    std::random_device rd;
+
+    std::random_device rd;                      //random number generation
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0, 9);
     
@@ -31,13 +31,15 @@ int main(){
     int score{0};
     int treasureX{7};
     int treasureY{7};
+
     while(true){
-          // 3. RENDER: Draw the screen
-       std::cout << "\033[2J\033[H"; //ANSI clr scr()
+          
+        std::cout << "\033[2J\033[H"; //clear terminal
        
-       std::cout << "\n=== :O  ===\n";
-       std::cout << "Score: " << score << "\n";
-       for (int y = 0; y < 10; y++) {
+        std::cout << "\n=== :3  ===\n";
+        std::cout << "Score: " << score << "\n";
+
+        for (int y = 0; y < 10; y++) {      //map
             for (int x = 0; x < 10; x++) {
                 if (x == playerX && y == playerY) {
                     std::cout << "@ ";
@@ -48,14 +50,16 @@ int main(){
                 }
             }
             std::cout << '\n';
-        }
+        }  
          std::cout << "=================\n";
         
-// 1. INPUT: Get player command
+
+
         std::cout << "Press WASD to move (Press Q to Quit): ";
-        char keyInput{getch()};
+        char keyInput{getch()};         //take input
        
-        // 2. UPDATE: Change game state
+
+        
         switch(keyInput){
             case 'W':       
             case 'w':      
@@ -81,8 +85,8 @@ int main(){
             case 'q':  
                 return 0;     
             }
-    //Collision detection (CLamp functions)
-        if(playerX<0){
+    
+        if(playerX<0){          //map borders
             playerX=0;
         }
         if(playerX>9){
@@ -94,11 +98,12 @@ int main(){
         if(playerY>9){
             playerY=9;
         }        
-    //Treasure detected :o
+
+        //Treasure detected :o
         if ((playerX == treasureX) && (playerY == treasureY)) {
             score++;
-            treasureX = distrib(gen); // Casino-grade random X!
-            treasureY = distrib(gen); // Casino-grade random Y!
+            treasureX = distrib(gen); //randomly generate next position
+            treasureY = distrib(gen); 
         }
         
     }
